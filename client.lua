@@ -25,7 +25,7 @@ Citizen.CreateThread(function()
             AddTextEntry(GetCurrentResourceName(), '按~y~[E] ~w~來開始沙龍')
             DisplayHelpTextThisFrame(GetCurrentResourceName(), false)
             if (IsControlJustReleased(0, 38)) then
-                ESX.TriggerServerCallback('barbershop:checkpostion', function(result)
+                ESX.TriggerServerCallback('barbershop:checkposition', function(result)
                     if result then
                         readyCutHair()-- 剪頭髮
                         createBarber()-- 召喚理髮師
@@ -38,7 +38,6 @@ Citizen.CreateThread(function()
     end
 end)
 
-
 Citizen.CreateThread(function()
     local blip = AddBlipForCoord(vector3(136.8, -1708.4, 28.3))
     SetBlipSprite(blip, 71)
@@ -48,7 +47,6 @@ Citizen.CreateThread(function()
     AddTextComponentSubstringPlayerName('沙龍店')
     EndTextCommandSetBlipName(blip)
 end)
-
 
 function readyCutHair()
     disableUI = true
@@ -67,7 +65,6 @@ function readyCutHair()
     DoScreenFadeIn(5000)
 end
 
-
 function createBarber()
     Ped = CreatePed(1, barber, 141.48, -1705.59, 29.29 - 0.95, 0.0, true, true)-- 生成NPC
     SetEntityHeading(Ped, 123.37)
@@ -79,7 +76,6 @@ function createBarber()
     started = true
     TriggerEvent('barbershop:start')
 end
-
 
 RegisterNetEvent('barbershop:start')
 AddEventHandler('barbershop:start', function()
@@ -153,7 +149,7 @@ end
 function destorycam()
     RenderScriptCams(false, false, 0, 1, 0)
     DestroyCam(cam, false)
-    TriggerServerEvent('barbershop:removepostion')
+    TriggerServerEvent('barbershop:removeposition')
 end
 
 RegisterNetEvent('barbershop:disableUI')
@@ -176,7 +172,7 @@ barberMenu = function(style)
     TriggerEvent('skinchanger:getSkin', function(skin)
         lastSkin = skin
     end)
-    
+
     local elements = {}
     local _components = {}
     TriggerEvent('skinchanger:getData', function(components, maxVals)
@@ -193,13 +189,13 @@ barberMenu = function(style)
                             found = true
                         end
                     end
-                    
+
                     if found then
                         table.insert(_components, components[i])
                     end
                 end
             end
-            
+
             -- Insert elements
             for i = 1, #_components, 1 do
                 local compname = _components[i].name
@@ -218,7 +214,7 @@ barberMenu = function(style)
                             textureof = _components[i].textureof,
                             type = 'slider'
                         }
-                        
+
                         for k, v in pairs(maxVals) do
                             if k == _components[i].name then
                                 data.max = v
@@ -237,7 +233,7 @@ barberMenu = function(style)
                             textureof = _components[i].textureof,
                             type = 'slider'
                         }
-                        
+
                         for k, v in pairs(maxVals) do
                             if k == _components[i].name then
                                 data.max = v
@@ -256,7 +252,7 @@ barberMenu = function(style)
                             textureof = _components[i].textureof,
                             type = 'slider'
                         }
-                        
+
                         for k, v in pairs(maxVals) do
                             if k == _components[i].name then
                                 data.max = v
@@ -317,17 +313,17 @@ barberMenu = function(style)
             TriggerEvent('skinchanger:getData', function(comp, max)
                 components, maxVals = comp, max
             end)
-            
+
             local newData = {}
-            
+
             for i = 1, #elements, 1 do
                 newData = {}
                 newData.max = maxVals[elements[i].name]
-                
+
                 if elements[i].textureof ~= nil and data.current.name == elements[i].textureof then
                     newData.value = 0
                 end
-                
+
                 menu.update({name = elements[i].name}, newData)
             end
             menu.refresh()
